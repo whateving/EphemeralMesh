@@ -1,0 +1,26 @@
+# Linux/systemd template; edit paths and create the unprivileged mesh user first.
+[Unit]
+Description=Ephemeral Mesh relay
+After=network.target
+
+[Service]
+Type=simple
+User=mesh
+Group=mesh
+WorkingDirectory=/opt/ephemeral-mesh
+# Keep this root-owned secret file out of the repository (mode 0600).
+EnvironmentFile=/etc/ephemeral-mesh.env
+Environment=MESH_DB=/var/lib/ephemeral-mesh/relay.db
+StateDirectory=ephemeral-mesh
+# One worker is required while active WebSocket connections live in process memory.
+ExecStart=/opt/ephemeral-mesh/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000 --workers 1 --ws-max-size 65536
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

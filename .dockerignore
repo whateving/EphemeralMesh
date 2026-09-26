@@ -1,0 +1,9 @@
+# Allowlist prevents credentials and personal data from being sent to the Docker daemon.
+*
+!Dockerfile
+!requirements.txt
+!main.py
+!db.py
+!relay_config.py
+!invitation.py
+!invite.py

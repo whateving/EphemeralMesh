@@ -1,0 +1,26 @@
+name: Regression checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      # Check the checkout before installing or executing application dependencies.
+      - run: python scripts/check_public_files.py
+      - run: python -m pip install -r requirements.txt
+      # Tests use disposable profiles and databases, never repository secrets.
+      - run: python -m unittest discover -s tests -v
+      - run: node --check app.js && node --test tests/test_ui.cjs
+      - run: docker build -t ephemeral-mesh:test .
+      - run: python tests/docker_smoke.py --image ephemeral-mesh:test
+      # Published-advisory checking complements, but does not replace, application tests.
+      - run: python -m pip install pip-audit==2.10.1 && python -m pip_audit -r requirements.txt

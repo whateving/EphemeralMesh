@@ -1,0 +1,17 @@
+# Replace this hostname with a domain pointing at your relay server.
+chat.example.com {
+    # Expose member messaging and encrypted files; keep administration on loopback.
+    @memberTransport path /ws /attachments/*
+    handle @memberTransport {
+        reverse_proxy 127.0.0.1:8000
+    }
+    # The fragment containing the invitation is never read or logged by the server.
+    handle / {
+        header Content-Type "text/plain; charset=utf-8"
+        header Referrer-Policy "no-referrer"
+        respond "Ephemeral Mesh invitation. Install the Python client from your host's trusted project source, then run: python chat_client.py --profile me --invite. Paste this entire address at the private prompt. Confirm the relay domain with your host and compare contact fingerprints before sharing private messages." 200
+    }
+    handle {
+        respond "Not found" 404
+    }
+}

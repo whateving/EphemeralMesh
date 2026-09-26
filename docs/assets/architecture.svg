@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="880" viewBox="0 0 1200 880" role="img" aria-labelledby="title desc">
+  <title id="title">Ephemeral Mesh architecture</title>
+  <desc id="desc">Two local browser and Python clients encrypt peer messages before sending them through Caddy to a FastAPI relay. Local SQLite profiles store keys and plaintext history. Relay SQLite stores encrypted pending messages and attachments, plus membership and routing metadata. Administrators connect through SSH to a loopback-only admin API.</desc>
+  <!-- Editable blueprint: endpoint boundaries contain plaintext; the relay receives encrypted peer payloads. -->
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#20364e" stroke-width="0.6"/></pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#65d9e9"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#e8f1fa} .heading{font-size:22px;font-weight:700} .label{font-size:17px;font-weight:700} .body{font-size:15px;fill:#bbccdf} .small{font-size:13px;fill:#bbccdf} .accent{fill:#65d9e9} .boundary{fill:#102337;stroke:#3a5978;stroke-width:1.5;stroke-dasharray:7 5} .box{fill:#173149;stroke:#65d9e9;stroke-width:1.5} .wire{fill:none;stroke:#65d9e9;stroke-width:2;marker-end:url(#arrow)} .two{marker-start:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="880" rx="18" fill="#0b192b"/><rect width="1200" height="880" rx="18" fill="url(#grid)"/>
+  <text x="40" y="46" class="heading">EPHEMERAL MESH</text><text x="40" y="73" class="body">System blueprint / invitation-only, self-hosted chat</text>
+  <text x="1160" y="47" text-anchor="end" class="small">01 / ENDPOINTS → TRANSPORT → STORAGE</text>
+  <!-- Each person runs a local Python bridge; JavaScript does not hold encryption keys. -->
+  <rect x="40" y="104" width="540" height="286" rx="12" class="boundary"/><rect x="620" y="104" width="540" height="286" rx="12" class="boundary"/>
+  <text x="62" y="135" class="label">ALICE'S COMPUTER</text><text x="642" y="135" class="label">BOB'S COMPUTER</text>
+  <rect x="62" y="158" width="172" height="86" rx="8" class="box"/><text x="148" y="188" text-anchor="middle" class="label">Browser UI</text><text x="148" y="211" text-anchor="middle" class="small">index.html + app.js</text><text x="148" y="231" text-anchor="middle" class="small">Messages / media / radar</text>
+  <rect x="642" y="158" width="172" height="86" rx="8" class="box"/><text x="728" y="188" text-anchor="middle" class="label">Browser UI</text><text x="728" y="211" text-anchor="middle" class="small">index.html + app.js</text><text x="728" y="231" text-anchor="middle" class="small">Messages / media / radar</text>
+  <path d="M244 201H334" class="wire two"/><text x="289" y="180" text-anchor="middle" class="small">Loopback</text><text x="289" y="230" text-anchor="middle" class="small">HTTP / WS</text>
+  <path d="M824 201H914" class="wire two"/><text x="869" y="180" text-anchor="middle" class="small">Loopback</text><text x="869" y="230" text-anchor="middle" class="small">HTTP / WS</text>
+  <rect x="344" y="158" width="214" height="86" rx="8" class="box"/><text x="451" y="187" text-anchor="middle" class="label">Python client</text><text x="451" y="211" text-anchor="middle" class="small">Encrypt / decrypt / reconnect</text><text x="451" y="231" text-anchor="middle" class="small">chat_client.py</text>
+  <rect x="924" y="158" width="214" height="86" rx="8" class="box"/><text x="1031" y="187" text-anchor="middle" class="label">Python client</text><text x="1031" y="211" text-anchor="middle" class="small">Encrypt / decrypt / reconnect</text><text x="1031" y="231" text-anchor="middle" class="small">chat_client.py</text>
+  <path d="M451 250V274" class="wire two"/><path d="M1031 250V274" class="wire two"/>
+  <rect x="62" y="282" width="496" height="82" rx="8" fill="#203245" stroke="#eabf7a"/><rect x="642" y="282" width="496" height="82" rx="8" fill="#203245" stroke="#eabf7a"/>
+  <text x="80" y="308" class="label">Local SQLite profile + media cache</text><text x="80" y="333" class="body">Identity keys / plaintext history / durable outbox</text><text x="80" y="353" class="small">client_store.py · plaintext at rest on the endpoint</text>
+  <text x="660" y="308" class="label">Local SQLite profile + media cache</text><text x="660" y="333" class="body">Identity keys / plaintext history / durable outbox</text><text x="660" y="353" class="small">client_store.py · plaintext at rest on the endpoint</text>
+  <!-- Routes leave the Python clients, not the profile boxes. TLS terminates at Caddy; E2E ciphertext stays encrypted. -->
+  <path d="M558 201H596V432H475V508" class="wire two"/><path d="M1138 201H1178V432H725V508" class="wire two"/>
+  <rect x="337" y="414" width="526" height="37" rx="8" fill="#0b192b"/><text x="600" y="438" text-anchor="middle" class="label accent">WSS / HTTPS · encrypted peer payloads</text>
+  <rect x="40" y="474" width="1120" height="267" rx="12" class="boundary"/><text x="62" y="504" class="label">HOSTED VPS</text>
+  <path d="M475 474V516" class="wire"/><path d="M725 474V516" class="wire"/>
+  <rect x="390" y="518" width="420" height="60" rx="8" class="box"/><text x="600" y="543" text-anchor="middle" class="label">Caddy · TLS termination · public 443</text><text x="600" y="565" text-anchor="middle" class="small">Proxies /ws and /attachments/* to the relay</text>
+  <path d="M600 585V609" class="wire two"/>
+  <rect x="390" y="617" width="420" height="96" rx="8" class="box"/><text x="600" y="644" text-anchor="middle" class="label">FastAPI relay · single worker</text><text x="600" y="669" text-anchor="middle" class="body">Auth / routing / quotas / ACK delivery</text><text x="600" y="693" text-anchor="middle" class="small">main.py + db.py · does not decrypt peer content</text>
+  <rect x="62" y="550" width="255" height="163" rx="8" fill="#203245" stroke="#eabf7a"/><text x="80" y="579" class="label">Server operator</text><text x="80" y="606" class="body">SSH → loopback admin API</text><text x="80" y="630" class="body">Issue / expire / revoke invites</text><text x="80" y="654" class="body">Revoke members / view limits</text><text x="80" y="692" class="small">Admin routes are not public</text><path d="M324 665H382" class="wire"/>
+  <rect x="883" y="550" width="255" height="163" rx="8" class="box"/><text x="901" y="579" class="label">Relay SQLite</text><text x="901" y="606" class="body">Encrypted pending messages</text><text x="901" y="630" class="body">Encrypted attachment blobs</text><text x="901" y="654" class="body">Membership + routing metadata</text><text x="901" y="692" class="small">Durable Docker volume</text><path d="M818 665H875" class="wire two"/>
+  <text x="40" y="779" class="label accent">DELIVERY CONTRACT</text><text x="40" y="805" class="body">Save locally → encrypt → relay persists → recipient decrypts + saves → ACK → relay clears queued payload</text>
+  <text x="40" y="840" class="small">Static ECDH + HKDF + Fernet · compare fingerprints independently · relay sees routing, sizes and timing · no forward secrecy</text>
+  <text x="40" y="862" class="small">Optional Ollama runs beside the local Python client; it is not hosted by the relay.</text>
+</svg>
