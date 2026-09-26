@@ -1,6 +1,6 @@
 # Versions validated together by the local regression suite.
 fastapi==0.141.1
-uvicorn==0.52.3
+uvicorn==0.53.0
 websockets==17.0.1
 cryptography==50.0.0
 aiosqlite==0.22.1
