@@ -1,5 +1,5 @@
 # Ship only relay code; local identities, chat histories and admin secrets never enter the image.
-FROM python:3.14.7-slim-trixie
+FROM python:3.14.8-slim-trixie
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 MESH_DB=/data/relay.db
 WORKDIR /app
 COPY requirements.txt ./
